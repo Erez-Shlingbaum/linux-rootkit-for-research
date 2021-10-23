@@ -22,11 +22,11 @@ void *memmem(const void *haystack, size_t haystacklen, const void *needle, size_
 			return (void *)p;
 	return NULL;
 }
-
+/*
 unsigned long **find_sys_call_table(void)
 {
 	unsigned long **p;
-/*
+
 	unsigned long sct_off = 0;
 	unsigned char code[255];
 	asm("sidt %0":"=m" (idtr));
@@ -35,7 +35,7 @@ unsigned long **find_sys_call_table(void)
 	memcpy(code, (void *)sct_off, sizeof(code));
 
 	p = (char **)memmem(code, sizeof(code), "\xff\x14\x85", 3);
-*/
+
 	p=kallsyms_lookup_name("sys_call_table");
 	if(p)
 	{
@@ -46,10 +46,12 @@ unsigned long **find_sys_call_table(void)
 	else
 		return NULL;
 }
+*/
 
 void disable_write_protection(void)
 {
 	unsigned long value;
+
 	asm volatile("mov %%cr0,%0" : "=r" (value));
 	if (value & 0x00010000) {
 		value &= ~0x00010000;
