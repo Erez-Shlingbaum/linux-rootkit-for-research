@@ -1,0 +1,1 @@
+cmd_/home/erez/work/rootkit/linux-rootkit-for-research/src/hidefiles.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000  --build-id  -T ./scripts/module-common.lds -o /home/erez/work/rootkit/linux-rootkit-for-research/src/hidefiles.ko /home/erez/work/rootkit/linux-rootkit-for-research/src/hidefiles.o /home/erez/work/rootkit/linux-rootkit-for-research/src/hidefiles.mod.o;  true

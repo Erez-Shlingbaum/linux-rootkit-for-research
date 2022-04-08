@@ -1,5 +1,4 @@
-#ifndef SYSCALL_HOOKS_H
-#define SYSCALL_HOOKS_H
+#pragma once
 
 #include <linux/semaphore.h>
 #include <linux/types.h>
@@ -8,23 +7,14 @@
 #include <linux/stat.h>
 #include <linux/syscalls.h>
 
-struct linux_dirent
-{
-	unsigned long d_ino;
-	unsigned long d_off;
-	unsigned short d_reclen;
-	char d_name[1];
-};
+#include "error_code.h"
 
-struct compat_linux_dirent
-{
-	compat_ulong_t d_ino;
-	compat_ulong_t d_off;
-	unsigned short d_reclen;
-	char d_name[1];
-};
+/**
+ * @brief  Hook a syscall and return a pointer to the original syscall handler
+ */
+void *hook_syscall(unsigned long *sys_call_table, uint16_t syscall_index, void *hook_addr);
 
-asmlinkage long sys_getdents_hook(const struct pt_regs *regs);
-extern asmlinkage long (*original_getdents)(const struct pt_regs *);
+error_code_e SYSCALL_HOOKS_init();
+void SYSCALL_HOOKS_exit();
 
-#endif
+extern unsigned long *sys_call_table;
