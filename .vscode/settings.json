@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "kallsyms.h": "c",
+        "cacheflush.h": "c",
+        "special_insns.h": "c",
+        "list.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}
