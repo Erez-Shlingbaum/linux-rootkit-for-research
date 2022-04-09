@@ -11,18 +11,18 @@ static inline void write_forced_cr0(unsigned long value)
                  : "+r"(value), "+m"(__force_order));
 }
 
-#define disable_write_protection()      \
-    do                                  \
-    {                                   \
-        unsigned long cr0 = read_cr0(); \
-        write_forced_cr0(cr0 &(~0x10000));     \
+#define disable_write_protection()         \
+    do                                     \
+    {                                      \
+        unsigned long cr0 = read_cr0();    \
+        write_forced_cr0(cr0 &(~0x10000)); \
     } while (false)
 
-#define enable_write_protection()       \
-    do                                  \
-    {                                   \
-        unsigned long cr0 = read_cr0(); \
-        write_forced_cr0(cr0 | 0x10000);       \
+#define enable_write_protection()        \
+    do                                   \
+    {                                    \
+        unsigned long cr0 = read_cr0();  \
+        write_forced_cr0(cr0 | 0x10000); \
     } while (false)
 
 #endif

@@ -1,1 +1,0 @@
-cmd_/home/erez/work/rootkit/linux-rootkit-for-research/src/hidefiles.o := ld -m elf_x86_64  -z max-page-size=0x200000    -r -o /home/erez/work/rootkit/linux-rootkit-for-research/src/hidefiles.o /home/erez/work/rootkit/linux-rootkit-for-research/src/main.o /home/erez/work/rootkit/linux-rootkit-for-research/src/syscall_hooks.o
