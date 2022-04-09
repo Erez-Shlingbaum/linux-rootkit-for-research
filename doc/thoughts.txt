@@ -1,0 +1,29 @@
+Relevant syscalls:
+
+send - Internally implemented by sendto
+send(sockfd, buf, len, flags); is equivalent to sendto(sockfd, buf, len, flags, NULL, 0);
+
+sendto - sends data
+
+recv - Implemented as " __sys_recvfrom(fd, ubuf, size, flags, NULL, NULL);"
+recvfrom - Uses sock_recvmsg which uses sock->ops->recvmsg
+
+
+recvmsg - uses  sock_recvmsg
+sendmsg - Similar to the sendto syscall but allows sending additional data via the msg argument.
+According to https://stackoverflow.com/questions/4258834/how-sendmsg-works,
+    send, sendto are just wrappers for sendmsg internally. (At least, for 2010)
+
+According to my research, at least in kernel V5.18,
+the flow is send -> sendto -> sock_sendmsg -> (sock_ptr->ops->sendmsg())
+
+Here is a study on V3.7.2 https://gist.github.com/yegle/4560621
+
+
+
+Note that intenally, there is sock_recvmsg, sock_recvmsg_nosec and etc. Not sure what this nosec does.
+
+
+Conclusions:
+send -> sendto -> sock_sendmsg
+recv -> recvfrom -> sock_recvmsg

@@ -14,6 +14,9 @@
  */
 void *hook_syscall(unsigned long *sys_call_table, uint16_t syscall_index, void *hook_addr);
 
+/**
+ * @brief  Initialize sys_call_table pointer and hooks __NR_sendto
+ */
 error_code_e SYSCALL_HOOKS_init();
 void SYSCALL_HOOKS_exit();
 

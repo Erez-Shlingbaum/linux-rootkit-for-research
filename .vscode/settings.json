@@ -5,7 +5,8 @@
         "special_insns.h": "c",
         "list.h": "c",
         "syscall_hooks.h": "c",
-        "error_code.h": "c"
+        "error_code.h": "c",
+        "syscalls.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     // Press the Enter key to activate a command (Default: false)

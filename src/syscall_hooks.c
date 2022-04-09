@@ -3,8 +3,8 @@
 
 unsigned long *sys_call_table = NULL;
 
-asmlinkage long sys_sendto_hook(const struct pt_regs *regs);
-asmlinkage long (*original_sendto)(const struct pt_regs *);
+asmlinkage long sys_sendmsg_hook(const struct pt_regs *regs);
+asmlinkage long (*original_sendmsg)(const struct pt_regs *);
 
 error_code_e SYSCALL_HOOKS_init()
 {
@@ -17,7 +17,7 @@ error_code_e SYSCALL_HOOKS_init()
 	printk(KERN_INFO "The address of sys_call_table is: %p\n", sys_call_table);
 
 	// Hook stuff
-	original_sendto = hook_syscall(sys_call_table, __NR_sendto, sys_sendto_hook);
+	original_sendmsg = hook_syscall(sys_call_table, __NR_sendmsg, sys_sendmsg_hook);
 	printk(KERN_INFO "%s: Finished\n", __func__);
 
 	return CODE_SUCCESS;
@@ -25,7 +25,8 @@ error_code_e SYSCALL_HOOKS_init()
 
 void SYSCALL_HOOKS_exit()
 {
-	(void)hook_syscall(sys_call_table, __NR_sendto, original_sendto);
+	// Restore hooks to original functions
+	(void)hook_syscall(sys_call_table, __NR_sendmsg, original_sendmsg);
 	printk(KERN_INFO "%s: Finished\n", __func__);
 }
 
@@ -40,16 +41,13 @@ void *hook_syscall(unsigned long *sys_call_table, uint16_t syscall_index, void *
 	return old_syscall;
 }
 
-asmlinkage long sys_sendto_hook(const struct pt_regs *regs)
+asmlinkage long sys_sendmsg_hook(const struct pt_regs *regs)
 {
-	int fd = regs->di;
-	void __user *buff = (void *)regs->si;
-	size_t len = regs->dx;
-	unsigned int flags = regs->r10;
-	struct sockaddr __user *addr = (struct sockaddr *)regs->r8;
-	int addr_len = regs->r9;
+	int fd = (int)regs->di;
+	struct user_msghdr __user *msg = (struct user_msghdr *)regs->si;
+	unsigned int flags = (unsigned int)regs->dx;
 
-	long original_sendto_result = original_sendto(regs);
-	printk("%s: fd=%d buff=%p len=%zu flags=%u addr=%p addr_len=%d\n", __func__, fd, buff, len, flags, addr, addr_len);
-	return original_sendto_result;
+	long original_sendmsg_result = original_sendmsg(regs);
+	printk("%s: fd=%d msg=%p flags=%u\n", __func__, fd, msg, flags);
+	return original_sendmsg_result;
 }
