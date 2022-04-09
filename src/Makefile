@@ -1,6 +1,6 @@
-obj-m += hidefiles.o
+obj-m += network_hooks.o
 
-hidefiles-y := main.o syscall_hooks.o
+network_hooks-y := main.o syscall_hooks.o
 KDIR=/lib/modules/$(shell uname -r)/build 
 
 ccflags-y := -std=gnu11 -Wno-declaration-after-statement -Wno-error=strict-prototypes -Wno-strict-prototypes
